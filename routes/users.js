@@ -21,12 +21,14 @@ var pool = mysql.createPool(conf.mysql)
 router.get('/', function(req, res, next) {
   pool.getConnection(function (err, connection) {
     if (err) {
-      logger.error(err);
+      //logger.error(err);
+      res.send(false)
       return;
     }
     connection.query(usersql.queryAll,function(err,rows){
       if(err){
-        logger.error(err)
+        //logger.error(err)
+        res.send(false)
       }else {
         res.json(rows)
       }
@@ -43,11 +45,13 @@ router.get('/queryByTel', function(req, res, next) {
   var phone = req.query.phone
   pool.getConnection(function (err, connection) {
     if (err) {
-      logger.error(err);
+      //logger.error(err);
+      res.send(false)
     }
     connection.query(usersql.queryByTel,phone,function(err,rows){
       if(err){
-        logger.error(err)
+        //logger.error(err)
+        res.send(false)
       }else {
         res.json(rows)
       }
@@ -63,7 +67,8 @@ router.get('/queryByTel', function(req, res, next) {
 router.post('/add',function(req,res,next){
   pool.getConnection(function (err, connection) {
     if (err) {
-      logger.error(err);
+      //logger.error(err);
+      res.send(false)
       return;
     }
     var params = req.body.users
@@ -71,9 +76,10 @@ router.post('/add',function(req,res,next){
     var nowtime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
     connection.query(usersql.insert,[uid, params.phone, params.name, params.password, nowtime, params.pic],function(err,rows){
         if(err){
-          logger.error(err)
+          //logger.error(err)
+          res.send(false)
         }else {
-          res.json(rows)
+          res.send(true)
         }
     })
     // 释放连接
@@ -88,13 +94,15 @@ router.get('/delete', function(req, res, next) {
   var phone = req.query.phone
   pool.getConnection(function (err, connection) {
     if (err) {
-      logger.error(err);
+      //logger.error(err);
+      res.send(false)
     }
     connection.query(usersql.delete,phone,function(err,rows){
       if(err){
-        logger.error(err)
+        //logger.error(err)
+        res.send(false)
       }else {
-        res.json(rows)
+        res.send(true)
       }
     })
     // 释放连接
@@ -109,15 +117,17 @@ router.post('/update',function(req,res,next){
   var params = req.body.users
   pool.getConnection(function(err,connection){
     if (err) {
-      logger.error(err);
+      //logger.error(err);
+      res.send(false)
     }
     var reqbody = [params.name, params.password, params.phone]
     console.log(params)
     connection.query(usersql.update,reqbody,function(err,rows){
       if(err){
-        logger.error(err)
+        //logger.error(err)
+        res.send(false)
       }else {
-        res.json(rows)
+        res.send(true)
       }
     })
     // 释放连接

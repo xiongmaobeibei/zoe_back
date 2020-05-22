@@ -21,12 +21,14 @@ var pool = mysql.createPool(conf.mysql)
 router.get('/', function(req, res, next) {
   pool.getConnection(function (err, connection) {
     if (err) {
-      logger.error(err);
+      //logger.error(err);
+      res.send(false)
       return;
     }
     connection.query(jobsql.queryAll,function(err,rows){
       if(err){
-        logger.error(err)
+        //logger.error(err)
+        res.send(false)
       }else {
         res.json(rows)
       }
@@ -46,19 +48,15 @@ router.get('/query', function(req, res, next) {
     querySql = querySql + ' and taskType=?'
     dataParams.push(params.taskType)
   }
-  if (params.startTime != null) {
-    querySql = querySql + ' and startTime=?'
-    dataParams.push(params.startTime)
-  }
   if (params.repeatType != null) {
     querySql = querySql + ' and repeatType=?'
     dataParams.push(params.repeatType)
   }
-  if (params.dateTime != null) {
-    querySql = querySql + ' and year(dateTime)=year(?) and month(dateTime)=month(?) and day(dateTime)=day(?)'
-    dataParams.push(params.dateTime)
-    dataParams.push(params.dateTime)
-    dataParams.push(params.dateTime)
+  if (params.createTime != null) {
+    querySql = querySql + ' and year(createTime)=year(?) and month(createTime)=month(?) and day(createTime)=day(?)'
+    dataParams.push(params.createTime)
+    dataParams.push(params.createTime)
+    dataParams.push(params.createTime)
   }
   if (params.status != null) {
     querySql = querySql + ' and status=?'
@@ -68,12 +66,14 @@ router.get('/query', function(req, res, next) {
   console.log(dataParams)
   pool.getConnection(function (err, connection) {
     if (err) {
-      logger.error(err);
+      //logger.error(err);
+      res.send(false)
       return;
     }
     connection.query(querySql,dataParams,function(err,rows){
       if(err){
-        logger.error(err)
+        //logger.error(err)
+        res.send(false)
       }else {
         res.json(rows)
       }
@@ -88,7 +88,8 @@ router.get('/query', function(req, res, next) {
 router.post('/add', function(req, res, next) {
   pool.getConnection(function (err, connection) {
     if (err) {
-      logger.error(err);
+      //logger.error(err);
+      res.send(false)
     }
     var params = req.body.jobs
     var tid = uuid.v1()
@@ -96,9 +97,10 @@ router.post('/add', function(req, res, next) {
     var addParams = [tid, params.userId, params.name, params.taskType, params.repeatType, nowtime,params.tags, params.dateTime, 1]
     connection.query(jobsql.insert,addParams,function(err,rows){
       if(err){
-        logger.error(err)
+        //logger.error(err)
+        res.send(false)
       }else {
-        res.json(rows)
+        res.send(true)
       }
     })
     // 释放连接
@@ -113,16 +115,18 @@ router.post('/add', function(req, res, next) {
 router.post('/update',function(req,res,next){
   pool.getConnection(function (err, connection) {
     if (err) {
-      logger.error(err);
+      //logger.error(err);
+      res.send(false)
       return;
     }
     var params = req.body.jobs
     console.log(params)
     connection.query(jobsql.update,[params.name, params.taskType, params.dateTime, params.tags, params.repeatType, params.status, params.id],function(err,rows){
       if(err){
-        logger.error(err)
+        //logger.error(err)
+        res.send(false)
       }else {
-        res.json(rows)
+        res.send(true)
       }
     })
     // 释放连接

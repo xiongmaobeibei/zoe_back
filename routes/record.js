@@ -27,7 +27,10 @@ router.get('/',function(req,res,next){
             return;
         }
         connection.query(recordsql.queryAll,function(err,rows){
-            if(err) logger.error(err)
+            if(err) {
+              //logger.error(err)
+              res.send(false)
+            }
             else res.json(rows)
         })
         // 释放连接
@@ -48,8 +51,12 @@ router.get('/insert',function(req,res,next){
         var nowtime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
         var params = req.body
         connection.query(recordsql.insertRecord, [tid, params, nowtime, nowtime], function(err,rows){
-            if(err) logger.error(err)
-            else res.json(rows)
+            if(err) {
+              //logger.error(err)
+              res.send(false)
+            }
+            //else res.json(rows)
+            res.send(true)
         })
         // 释放连接
         connection.release();
@@ -67,8 +74,12 @@ router.get('/queryByUser',function(req,res,next){
       }
       var params = req.body
       connection.query(recordsql.queryByUser, [params.userId,params.dateTime,params.dateTime,params.dateTime], function(err,rows){
-          if(err) logger.error(err)
-          else res.json(rows)
+          if(err) {
+            //logger.error(err)
+            res.send(false)
+          }
+          //else res.json(rows)
+          else res.send(true)
       })
       // 释放连接
       connection.release();
@@ -85,7 +96,8 @@ router.get('/queryByUser',function(req,res,next){
 router.post('/updateFinished', function (req, res, next) {
     pool.getConnection(function (err, connection) {
       if (err) {
-        logger.error(err);
+        //logger.error(err);
+        res.send(false)
         return;
       }
   
@@ -98,7 +110,8 @@ router.post('/updateFinished', function (req, res, next) {
           } else {
               console.log('1')
             reject(err)
-            logger.error(err)
+            //logger.error(err)
+            res.send(false)
           }
         });
       })
@@ -110,7 +123,8 @@ router.post('/updateFinished', function (req, res, next) {
           } else {
             console.log('2',rows)
             reject(err)
-            logger.error(err)
+            //logger.error(err)
+            res.send(false)
           }
         });
       })
@@ -124,7 +138,8 @@ router.post('/updateFinished', function (req, res, next) {
           } else {
             console.log('3')
             reject(err)
-            logger.error(err)
+            //logger.error(err)
+            res.send(false)
           }
         });
       })
@@ -155,7 +170,8 @@ router.post('/updateFinished', function (req, res, next) {
 router.post('/cancelFinished', function (req, res, next) {
     pool.getConnection(function (err, connection) {
       if (err) {
-        logger.error(err);
+        //logger.error(err);
+        res.send(false)
         return;
       }
   
@@ -168,7 +184,8 @@ router.post('/cancelFinished', function (req, res, next) {
           } else {
               console.log('1')
             reject(err)
-            logger.error(err)
+            //logger.error(err)
+            res.send(false)
           }
         });
       })
@@ -180,7 +197,8 @@ router.post('/cancelFinished', function (req, res, next) {
           } else {
             console.log('2',rows)
             reject(err)
-            logger.error(err)
+            //logger.error(err)
+            res.send(false)
           }
         });
       })
@@ -196,7 +214,8 @@ router.post('/cancelFinished', function (req, res, next) {
           } else {
             console.log('3')
             reject(err)
-            logger.error(err)
+            //logger.error(err)
+            res.send(false)
           }
         });
       })
