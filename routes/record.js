@@ -30,6 +30,8 @@ router.get('/',function(req,res,next){
             if(err) logger.error(err)
             else res.json(rows)
         })
+        // 释放连接
+        connection.release();
     })
 })
 
@@ -49,6 +51,8 @@ router.get('/insert',function(req,res,next){
             if(err) logger.error(err)
             else res.json(rows)
         })
+        // 释放连接
+        connection.release();
     })
 })
 
@@ -66,6 +70,8 @@ router.get('/queryByUser',function(req,res,next){
           if(err) logger.error(err)
           else res.json(rows)
       })
+      // 释放连接
+      connection.release();
   })
 })
 
@@ -89,7 +95,9 @@ router.post('/update',function(req,res,next){
         }else {
           res.json(rows)
         }
-      });
+      })
+      // 释放连接
+      connection.release();
     }
   })
 });
@@ -161,6 +169,8 @@ router.post('/updateFinished', function (req, res, next) {
           await addTaskRecord(tItem, startTime, endTime)
         }))
       }))
+      // 释放连接
+      connection.release();
     })
   });
 
@@ -233,6 +243,8 @@ router.post('/cancelFinished', function (req, res, next) {
       // }))
 
       Promise.all([searchTaskById(taskId),cancelTaskById(taskId),delTaskRecord(taskId,time)])
+      // 释放连接
+      connection.release();
     })
   });
 

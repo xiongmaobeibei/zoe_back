@@ -30,7 +30,9 @@ router.get('/', function(req, res, next) {
       }else {
         res.json(rows)
       }
-    });
+    })
+    // 释放连接
+    connection.release();
   })
 });
 /**
@@ -75,7 +77,9 @@ router.get('/query', function(req, res, next) {
       }else {
         res.json(rows)
       }
-    });
+    })
+    // 释放连接
+    connection.release();
   })
 });
 /**
@@ -96,7 +100,9 @@ router.post('/add', function(req, res, next) {
       }else {
         res.json(rows)
       }
-    });
+    })
+    // 释放连接
+    connection.release();
   })
 });
 
@@ -130,7 +136,9 @@ router.post('/update',function(req,res,next){
       }else {
         res.json(rows)
       }
-    });
+    })
+    // 释放连接
+    connection.release();
   })
 });
 

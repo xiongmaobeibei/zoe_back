@@ -26,7 +26,9 @@ router.get('/', function(req, res, next) {
       }else {
         res.json(rows)
       }
-    });
+    })
+    // 释放连接
+    connection.release();
   })
 });
 
