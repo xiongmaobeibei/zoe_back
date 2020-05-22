@@ -93,7 +93,7 @@ router.post('/add', function(req, res, next) {
     var params = req.body.jobs
     var tid = uuid.v1()
     var nowtime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
-    var addParams = [tid, params.userId, params.name, params.taskType, params.startTime, params.repeatType, params.tags, nowtime, params.status]
+    var addParams = [tid, params.userId, params.name, params.taskType, params.repeatType, nowtime,params.tags, params.dateTime, 1]
     connection.query(jobsql.insert,addParams,function(err,rows){
       if(err){
         logger.error(err)
@@ -116,21 +116,9 @@ router.post('/update',function(req,res,next){
       logger.error(err);
       return;
     }
-    // var allParams = req.body.jobs
-    // var i = allParams.length
-    // for(m=0;m<i;m++){
-    //   var params = allParams[m]
-    //   connection.query(jobsql.update,[params.name, params.taskType, params.startTime, params.tags, params.repeattype, params.status, params.id],function(err,rows){
-    //     if(err){
-    //       logger.error(err)
-    //     }else {
-    //       res.json(rows)
-    //     }
-    //   });
-    // }
     var params = req.body.jobs
     console.log(params)
-    connection.query(jobsql.update,[params.name, params.taskType, params.startTime, params.tags, params.repeattype, params.status, params.id],function(err,rows){
+    connection.query(jobsql.update,[params.name, params.taskType, params.dateTime, params.tags, params.repeatType, params.status, params.id],function(err,rows){
       if(err){
         logger.error(err)
       }else {

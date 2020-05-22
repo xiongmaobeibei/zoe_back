@@ -75,33 +75,6 @@ router.get('/queryByUser',function(req,res,next){
   })
 })
 
-/**
- * 更新修改任务的时候需要将一整个对象传输过来
- * 允许接受对象数组jobs
- */
-router.post('/update',function(req,res,next){
-  pool.getConnection(function (err, connection) {
-    if (err) {
-      logger.error(err);
-      return;
-    }
-    var allParams = req.body.jobs
-    var i = allParams.length
-    for(m=0;m<i;m++){
-      var params = allParams[m]
-      connection.query(jobsql.update,[params.name, params.taskType, params.startTime, params.tags, params.repeattype, params.status, params.id],function(err,rows){
-        if(err){
-          logger.error(err)
-        }else {
-          res.json(rows)
-        }
-      })
-      // 释放连接
-      connection.release();
-    }
-  })
-});
-
 
 
 /**
@@ -227,20 +200,6 @@ router.post('/cancelFinished', function (req, res, next) {
           }
         });
       })
-  
-      // Promise.all(taskIdList.map(async tItem => {
-      //   const taskItem = await searchTaskById(tItem)
-      //   // 完成任务
-      //   // 修改状态
-      //   if (taskItem && taskItem.repeatType === 1) {
-      //     await cancelTaskById(tItem)
-      //   }
-      //   // 插入记录
-      //   await Promise.all(timeList.map(async tlItem => {
-      //     const { startTime, endTime } = tlItem
-      //     await addTaskRecord(tItem, startTime, endTime)
-      //   }))
-      // }))
 
       Promise.all([searchTaskById(taskId),cancelTaskById(taskId),delTaskRecord(taskId,time)])
       // 释放连接
