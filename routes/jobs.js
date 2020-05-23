@@ -120,13 +120,13 @@ router.post('/update',function(req,res,next){
       return;
     }
     var params = req.body.jobs
-    console.log(params)
-    connection.query(jobsql.update,[params.name, params.taskType, params.dateTime, params.tags, params.repeatType, params.status, params.id],function(err,rows){
+    connection.query(jobsql.update,[params.name, params.taskType, params.dateTime, params.tags, params.repeatType, params.userId,params.status, params.id],function(err,rows){
       if(err){
         //logger.error(err)
         res.send(false)
       }else {
-        res.send(true)
+        res.json(rows)
+        //res.send(true)
       }
     })
     // 释放连接

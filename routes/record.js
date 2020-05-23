@@ -130,7 +130,8 @@ router.post('/updateFinished', function (req, res, next) {
       })
   
       const addTaskRecord = (taskId, startTime, endTime) => new Promise((resolve, reject) => {
-        var tid = uuid.v1()
+        var mid = uuid.v1()
+        var tid = mid + uuid.v4()
         var params = [tid, taskId, endTime, startTime]
         connection.query(recordsql.insertRecord, params, function (err, rows) {
           if (rows && rows.affectedRows > 0) {
