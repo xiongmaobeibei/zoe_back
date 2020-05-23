@@ -103,21 +103,44 @@ router.post('/updateFinished', function (req, res, next) {
   
       const { taskIdList, timeList } = req.body
       
-      const searchTaskById = (taskId) => new Promise((resolve, reject) => {
-        connection.query(jobsql.queryById, taskId, (err, rows) => {
-          if (rows && rows.length > 0 && rows[0]) {
-            resolve(rows[0])
-          } else {
-              console.log('1')
-            reject(err)
-            logger.error(err)
-            res.send(false)
+      var insql = recordsql.insertRecord
+      var params = []
+      var upsql = jobsql.updateStatusByR
+        for(i=1;i<taskIdList.length;i++){
+          upsql = upsql+',?'
+          for(j=0;j<timeList.length;j++){
+            var tid = uuid.v1()+uuid.v4()
+            var {startTime,endTime} = timeList[j]
+            params = params.concat([tid,taskIdList[i],endTime,startTime])
+            if(i=0)insql = insql+'VALUES(?,?,?,?)'
+            else insql = insql+',VALUES(?,?,?,?)'
           }
-        });
-      })
-  
-      const finishedTaskById = (taskId) => new Promise((resolve, reject) => {
-        connection.query(jobsql.updateStatus, [2, taskId], (err, rows) => {
+        }
+      upsql = upsql+')'
+      console.log(insql)
+      console.log(upsql)
+      console.log(params)
+
+      connection.query(upsql, taskIdList, (err, rows) => {
+        if(err) {
+          logger.error(err)
+          res.send(false)
+        }
+        //else res.json(rows)
+        else res.send(true)
+      });
+
+      connection.query(insql, params, function (err, rows) {
+        if(err) {
+          logger.error(err)
+          res.send(false)
+        }
+        //else res.json(rows)
+        else res.send(true)
+      });
+
+      const finishedTaskById = (upsql,taskIdList) => new Promise((resolve, reject) => {
+        connection.query(upsql, taskIdList, (err, rows) => {
           if (rows && rows.affectedRows > 0) {
             resolve(true)
           } else {
@@ -129,35 +152,82 @@ router.post('/updateFinished', function (req, res, next) {
         });
       })
   
-      const addTaskRecord = (taskId, startTime, endTime) => new Promise((resolve, reject) => {
-        var mid = uuid.v1()
-        var tid = mid + uuid.v4()
-        var params = [tid, taskId, endTime, startTime]
-        connection.query(recordsql.insertRecord, params, function (err, rows) {
+      const addTaskRecord = (insql, params) => new Promise((resolve, reject) => {
+        connection.query(insql, params, function (err, rows) {
           if (rows && rows.affectedRows > 0) {
             resolve(true)
           } else {
-            console.log('3')
             reject(err)
             logger.error(err)
             res.send(false)
           }
         });
       })
+
+      Promise.all([finishedTaskById(upsql,taskIdList),addTaskRecord(insql,params)])
+
+      // const finishedTaskById = (taskIdList) => new Promise((resolve, reject) => {
+      //   var upsql = jobsql.updateStatusByR
+      //   for(i=1;i<taskIdList.length;i++){
+      //     upsql = upsql+',?'
+      //   }
+      //   upsql = upsql+')'
+      //   connection.query(upsql, taskIdList, (err, rows) => {
+      //     if (rows && rows.affectedRows > 0) {
+      //       resolve(true)
+      //     } else {
+      //       console.log('2',rows)
+      //       reject(err)
+      //       logger.error(err)
+      //       res.send(false)
+      //     }
+      //   });
+      // })
   
-      Promise.all(taskIdList.map(async tItem => {
-        const taskItem = await searchTaskById(tItem)
-        // 完成任务
-        // 修改状态
-        if (taskItem && taskItem.repeatType === 1) {
-          await finishedTaskById(tItem)
-        }
-        // 插入记录
-        await Promise.all(timeList.map(async tlItem => {
-          const { startTime, endTime } = tlItem
-          await addTaskRecord(tItem, startTime, endTime)
-        }))
-      }))
+      // const addTaskRecord = (taskIdList, startTime, endTime) => new Promise((resolve, reject) => {
+      //   var params = []
+      //   var insql = recordsql.insertRecord
+      //   for(i=0;i<taskIdList.length;i++){
+      //     var tid = uuid.v1()+uuid.v4()
+      //     params = params.concat([tid,taskIdList[i],endTime,startTime])
+      //     if(i=0)insql = insql+'VALUES(?,?,?,?)'
+      //     else insql = insql+',VALUES(?,?,?,?)'
+      //   }
+      //   console.log(taskIdList.length)
+      //   console.log(insql)
+      //   console.log(params)
+      //   connection.query(insql, params, function (err, rows) {
+      //     if (rows && rows.affectedRows > 0) {
+      //       resolve(true)
+      //     } else {
+      //       reject(err)
+      //       logger.error(err)
+      //       res.send(false)
+      //     }
+      //   });
+      // })
+  
+      // Promise.all(
+      //   [finishedTaskById(taskIdList)].concat(
+      //     timeList.map(async tlItem => {
+      //       const { startTime, endTime } = tlItem
+      //       await addTaskRecord(taskIdList, startTime, endTime)
+      //     })
+      //   )
+      // //   timeList.map(async tItem => {
+      // //   const taskItem = await searchTaskById(tItem)
+      // //   // 完成任务
+      // //   // 修改状态
+      // //   if (taskItem && taskItem.repeatType === 1) {
+      // //     await finishedTaskById(tItem)
+      // //   }
+      // //   // 插入记录
+      // //   await Promise.all(timeList.map(async tlItem => {
+      // //     const { startTime, endTime } = tlItem
+      // //     await addTaskRecord(tItem, startTime, endTime)
+      // //   }))
+      // // }))
+      // )
       // 释放连接
       connection.release();
     })
