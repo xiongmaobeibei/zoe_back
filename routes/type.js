@@ -17,13 +17,13 @@ var pool = mysql.createPool(conf.mysql)
 router.get('/', function(req, res, next) {
   pool.getConnection(function (err, connection) {
     if (err) {
-      //logger.error(err);
+      logger.error(err);
       res.send(false)
       return;
     }
     connection.query(typesql.queryAll,function(err,rows){
       if(err){
-        //logger.error(err)
+        logger.error(err)
         res.send(false)
       }else {
         res.json(rows)

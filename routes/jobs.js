@@ -21,13 +21,13 @@ var pool = mysql.createPool(conf.mysql)
 router.get('/', function(req, res, next) {
   pool.getConnection(function (err, connection) {
     if (err) {
-      //logger.error(err);
+      logger.error(err);
       res.send(false)
       return;
     }
     connection.query(jobsql.queryAll,function(err,rows){
       if(err){
-        //logger.error(err)
+        logger.error(err)
         res.send(false)
       }else {
         res.json(rows)
@@ -66,13 +66,13 @@ router.get('/query', function(req, res, next) {
   console.log(dataParams)
   pool.getConnection(function (err, connection) {
     if (err) {
-      //logger.error(err);
+      logger.error(err);
       res.send(false)
       return;
     }
     connection.query(querySql,dataParams,function(err,rows){
       if(err){
-        //logger.error(err)
+        logger.error(err)
         res.send(false)
       }else {
         res.json(rows)
@@ -88,7 +88,7 @@ router.get('/query', function(req, res, next) {
 router.post('/add', function(req, res, next) {
   pool.getConnection(function (err, connection) {
     if (err) {
-      //logger.error(err);
+      logger.error(err);
       res.send(false)
     }
     var params = req.body.jobs
@@ -97,7 +97,7 @@ router.post('/add', function(req, res, next) {
     var addParams = [tid, params.userId, params.name, params.taskType, params.repeatType, nowtime,params.tags, params.dateTime, 1]
     connection.query(jobsql.insert,addParams,function(err,rows){
       if(err){
-        //logger.error(err)
+        logger.error(err)
         res.send(false)
       }else {
         res.send(true)
@@ -115,15 +115,16 @@ router.post('/add', function(req, res, next) {
 router.post('/update',function(req,res,next){
   pool.getConnection(function (err, connection) {
     if (err) {
-      //logger.error(err);
-      res.send(false)
+      logger.error(err);
+      res.send(err)
       return;
     }
     var params = req.body.jobs
+    console.log(params)
     connection.query(jobsql.update,[params.name, params.taskType, params.dateTime, params.tags, params.repeatType, params.userId,params.status, params.id],function(err,rows){
       if(err){
-        //logger.error(err)
-        res.send(false)
+        logger.error(err)
+        res.send(err)
       }else {
         res.json(rows)
         //res.send(true)
