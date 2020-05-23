@@ -93,8 +93,8 @@ router.get('/queryByUser',function(req,res,next){
 ***增加多条record记录
 ***改repeat=1任务的状态为2
 */
-router.post('/updateFinished', function (req, res, next) {
-    pool.getConnection(function (err, connection) {
+router.post('/updateFinished', async function (req, res, next) {
+    pool.getConnection(async function (err, connection) {
       if (err) {
         logger.error(err);
         res.send(false)
@@ -104,10 +104,9 @@ router.post('/updateFinished', function (req, res, next) {
       const { taskIdList, timeList } = req.body
       
       const searchTaskByIds = (taskIds) => new Promise((resolve, reject) => {
-        const strTaskIds = taskIds.join(',')
-        connection.query(jobsql.queryByIds, strTaskIds, (err, rows) => {
+        connection.query(jobsql.queryByIds, [taskIds], (err, rows) => {
           if (rows && rows.length > 0 && rows[0]) {
-            resolve(rows[0])
+            resolve(rows)
           } else {
             reject(err)
             logger.error(err)
@@ -115,22 +114,8 @@ router.post('/updateFinished', function (req, res, next) {
         });
       })
   
-      const finishedTaskByIds = (taskIds) => new Promise((resolve, reject) => {
-        const strTaskIds = taskIds.join(',')
-        connection.query(jobsql.updateStatusByIds, [2, strTaskIds], (err, rows) => {
-          if (rows && rows.affectedRows > 0) {
-            resolve(true)
-          } else {
-            reject(err)
-            logger.error(err)
-          }
-        });
-      })
-  
-      const addTaskRecords = (taskRecords) => new Promise((resolve, reject) => {
-        // var tid = uuid.v1()
-        // var params = [tid, taskId, endTime, startTime]
-        connection.query(recordsql.insertRecords, taskRecords, function (err, rows) {
+      const finishedTaskById = (taskIds) => new Promise((resolve, reject) => {
+        connection.query(jobsql.updateStatus, [2, taskIds], (err, rows) => {
           if (rows && rows.affectedRows > 0) {
             resolve(true)
           } else {
@@ -140,24 +125,44 @@ router.post('/updateFinished', function (req, res, next) {
         });
       })
 
+
+  
+      const addTaskRecords = (taskRecords) => new Promise((resolve, reject) => {
+        // var tid = uuid.v1()
+        // var params = [tid, taskId, endTime, startTime]
+        connection.query(recordsql.insertRecords, [taskRecords], function (err, rows) {
+          if (rows && rows.affectedRows > 0) {
+            resolve(true)
+          } else {
+            reject(err)
+            console.log(3)
+            logger.error(err)
+          }
+        });
+      })
+
       // 获取不重复任务
       let noRepeats = []
       let recordList = []
       // 通过id获取所有的任务
-      const taskList = searchTaskByIds(taskIdList)
+      const taskList = await searchTaskByIds(taskIdList)
       taskList.forEach((tItem) => {
         if (tItem.repeatType === 1) {
-          noRepeats.push(tItem)
+          noRepeats.push(tItem.id)
         }
         timeList.forEach((timeItem, timeIndex) => {
           const { startTime, endTime } = timeItem
-          recordList.push([`${uuid.v1()}_${timeIndex}`, tItem.id, startTime, endTime])
+          recordList.push([`${uuid.v1()}_${timeIndex}`, tItem.id, endTime, startTime])
         })
       })
+      console.log(noRepeats)
       // 更新所有不重复的任务状态 为 2
-      await finishedTaskByIds(noRepeats)
+      Promise.all(noRepeats.map(nItem => {
+        return finishedTaskById(nItem)
+      }))
       // 批量添加记录
       await addTaskRecords(recordList)
+      res.send(true)
       // 释放连接
       connection.release();
     })

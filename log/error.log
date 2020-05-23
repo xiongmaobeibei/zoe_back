@@ -20,3 +20,23 @@
 2020-05-23T06:08:55.081Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VALUES('e1d93f71-9cbb-11ea-b673-4f5d02ca7ffc1dbff97b-e591-43d8-a69f-de3120a92843' at line 1
 2020-05-23T06:10:51.214Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VALUES('2711bcc1-9cbc-11ea-887e-210bd467dc40b249f846-e47d-4d95-a615-3ea91a5007ef' at line 1
 2020-05-23T06:13:00.788Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VALUES('7445d621-9cbc-11ea-89cc-a7e7439770c8a31d8d52-ad18-46ae-a99a-afc7c21f218c' at line 1
+2020-05-23T08:05:45.674Z error: null
+2020-05-23T08:06:58.271Z error: null
+2020-05-23T08:08:31.571Z error: null
+2020-05-23T08:34:49.542Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''1223,1224,2345'' at line 1
+2020-05-23T08:38:33.991Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''(1223,1224,2345)'' at line 1
+2020-05-23T08:41:14.717Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''1223', '1224', '2345'' at line 1
+2020-05-23T08:43:45.371Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''1223', '1224', '2345'' at line 1
+2020-05-23T08:47:59.523Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''1224', '1223'' at line 1
+2020-05-23T08:49:12.356Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''1223'' at line 1
+2020-05-23T09:00:04.440Z error: null
+2020-05-23T09:01:51.913Z error: ER_OPERAND_COLUMNS: Operand should contain 1 column(s)
+2020-05-23T09:10:01.874Z error: ER_OPERAND_COLUMNS: Operand should contain 1 column(s)
+2020-05-23T09:11:44.985Z error: ER_OPERAND_COLUMNS: Operand should contain 1 column(s)
+2020-05-23T09:13:02.927Z error: ER_OPERAND_COLUMNS: Operand should contain 1 column(s)
+2020-05-23T09:14:47.316Z error: ER_OPERAND_COLUMNS: Operand should contain 1 column(s)
+2020-05-23T09:22:33.415Z error: ER_OPERAND_COLUMNS: Operand should contain 1 column(s)
+2020-05-23T09:28:32.710Z error: ER_OPERAND_COLUMNS: Operand should contain 1 column(s)
+2020-05-23T09:32:38.800Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''577780e0-9cd8-11ea-9fa6-27c3f87738f1_0', '1223', '2020-05-14 22:32:03', '2020-0' at line 1
+2020-05-23T09:33:26.812Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''1223', '1224', '2345'' at line 1
+2020-05-23T09:36:29.162Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''e0f6c880-9cd8-11ea-ab92-ad50a318fa30_0', '1223', '2020-05-14 22:32:03', '2020-0' at line 1
