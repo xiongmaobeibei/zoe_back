@@ -89,7 +89,9 @@ router.get('/search', function(req, res, next) {
       res.send(false)
       return;
     }
-    connection.query(jobsql.queryById,req.body.id,function(err,rows){
+    var id = req.query.id
+    console.log(id)
+    connection.query(jobsql.queryById,id,function(err,rows){
       if(err){
         logger.error(err)
         res.send(false)

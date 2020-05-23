@@ -40,3 +40,6 @@
 2020-05-23T09:32:38.800Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''577780e0-9cd8-11ea-9fa6-27c3f87738f1_0', '1223', '2020-05-14 22:32:03', '2020-0' at line 1
 2020-05-23T09:33:26.812Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''1223', '1224', '2345'' at line 1
 2020-05-23T09:36:29.162Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''e0f6c880-9cd8-11ea-ab92-ad50a318fa30_0', '1223', '2020-05-14 22:32:03', '2020-0' at line 1
+2020-05-23T14:10:27.644Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 1
+2020-05-23T14:12:04.135Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 1
+2020-05-23T14:12:39.267Z error: ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 1
