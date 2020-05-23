@@ -82,6 +82,25 @@ router.get('/query', function(req, res, next) {
     connection.release();
   })
 });
+router.get('/search', function(req, res, next) {
+  pool.getConnection(function (err, connection) {
+    if (err) {
+      logger.error(err);
+      res.send(false)
+      return;
+    }
+    connection.query(jobsql.queryById,req.body.id,function(err,rows){
+      if(err){
+        logger.error(err)
+        res.send(false)
+      }else {
+        res.json(rows)
+      }
+    })
+    // 释放连接
+    connection.release();
+  })
+});
 /**
 * 新建任务
 */
